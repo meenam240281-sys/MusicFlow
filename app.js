@@ -572,21 +572,104 @@ class FocusFlowApp {
         this.sessionDescription.textContent = description;
     }
 
+    // NEW: Start session with improved instructions
     startSession() {
+        console.log('FocusFlow: Starting session with source:', this.selectedMusicSource);
+        
         // Update UI
         this.startSessionBtn.classList.add('hidden');
         this.pauseSessionBtn.classList.remove('hidden');
         this.stopSessionBtn.classList.remove('hidden');
         
-        // Start music if we can control it
-        if (this.selectedMusicSource === 'youtube') {
-            EmbedManager.play();
-        }
+        // Show instructions based on music source
+        this.showSessionInstructions();
         
         // Start timer if enabled
         if (this.selectedTimerMode === 'timer') {
             focusTimer.start();
         }
+        
+        // For YouTube, try to autoplay
+        if (this.selectedMusicSource === 'youtube') {
+            setTimeout(() => {
+                EmbedManager.play();
+            }, 1000);
+        }
+        
+        // For Spotify and others, show reminder
+        if (['spotify', 'apple', 'manual'].includes(this.selectedMusicSource)) {
+            this.showMusicReminder();
+        }
+    }
+
+    // NEW: Show session instructions based on music source
+    showSessionInstructions() {
+        const sessionInfo = document.querySelector('.session-info');
+        if (!sessionInfo) return;
+        
+        let instructions = '';
+        
+        switch (this.selectedMusicSource) {
+            case 'spotify':
+                instructions = `
+                    <div class="session-instruction">
+                        <i class="fas fa-info-circle"></i>
+                        <p><strong>Spotify Users:</strong> You must manually click play in the Spotify player above.</p>
+                    </div>
+                `;
+                break;
+                
+            case 'apple':
+                instructions = `
+                    <div class="session-instruction">
+                        <i class="fas fa-info-circle"></i>
+                        <p><strong>Apple Music Users:</strong> Make sure Apple Music is playing in the other tab.</p>
+                    </div>
+                `;
+                break;
+                
+            case 'manual':
+                instructions = `
+                    <div class="session-instruction">
+                        <i class="fas fa-info-circle"></i>
+                        <p><strong>Manual Mode:</strong> Start playing music on your device, then return here.</p>
+                    </div>
+                `;
+                break;
+        }
+        
+        if (instructions) {
+            const existing = sessionInfo.querySelector('.session-instruction');
+            if (existing) existing.remove();
+            
+            sessionInfo.insertAdjacentHTML('beforeend', instructions);
+        }
+    }
+
+    // NEW: Show music reminder for sources that need manual start
+    showMusicReminder() {
+        const reminder = `
+            <div class="music-reminder">
+                <div class="reminder-content">
+                    <i class="fas fa-music"></i>
+                    <div>
+                        <h4>Start Your Music</h4>
+                        <p>Please ensure your music is playing before starting the timer.</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        const existing = document.querySelector('.music-reminder');
+        if (existing) existing.remove();
+        
+        document.querySelector('.session-display').insertAdjacentHTML('afterbegin', reminder);
+        
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+            const reminder = document.querySelector('.music-reminder');
+            if (reminder) reminder.remove();
+        }, 10000);
     }
 
     pauseSession() {
@@ -626,6 +709,10 @@ class FocusFlowApp {
         this.pauseSessionBtn.classList.add('hidden');
         this.stopSessionBtn.classList.add('hidden');
         this.sessionCompleteBtn.classList.remove('hidden');
+        
+        // Remove any instructions
+        const instruction = document.querySelector('.session-instruction');
+        if (instruction) instruction.remove();
     }
 
     handleSessionComplete() {
@@ -675,6 +762,10 @@ class FocusFlowApp {
         this.pauseSessionBtn.classList.add('hidden');
         this.stopSessionBtn.classList.add('hidden');
         this.sessionCompleteBtn.classList.add('hidden');
+        
+        // Remove any instructions
+        const instruction = document.querySelector('.session-instruction');
+        if (instruction) instruction.remove();
         
         // Go back to step 1
         this.showStep(1);
