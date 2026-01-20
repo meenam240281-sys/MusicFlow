@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlow - Minimal Focus Music Controller</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-waves"></i>
+                <h1>FocusFlow</h1>
+            </div>
+            <p class="tagline">Flow with your music. Focus with intent.</p>
+        </header>
+
+        <!-- Main App Container -->
+        <main class="app-main">
+            <!-- Progress Indicator -->
+            <div class="progress-indicator">
+                <div class="step active" data-step="1">1. Music</div>
+                <div class="step" data-step="2">2. Focus</div>
+                <div class="step" data-step="3">3. Timer</div>
+                <div class="step" data-step="4">4. Flow</div>
+            </div>
+
+            <!-- Step 1: Music Source Selection -->
+            <section id="step-music" class="step-content active">
+                <h2><i class="fas fa-music"></i> Connect Your Music</h2>
+                <p class="step-description">Choose where your music will play from. We only control playback - your music stays on your platforms.</p>
+                
+                <div class="music-source-options">
+                    <div class="source-card" data-source="spotify">
+                        <div class="source-icon">
+                            <i class="fab fa-spotify"></i>
+                        </div>
+                        <h3>Spotify</h3>
+                        <p>Playlists, albums, or tracks via Spotify Web Player</p>
+                        <div class="source-input hidden">
+                            <input type="text" id="spotify-input" placeholder="Paste Spotify playlist or track URL">
+                            <button class="btn-secondary" id="spotify-connect">Connect</button>
+                        </div>
+                    </div>
+                    
+                    <div class="source-card" data-source="youtube">
+                        <div class="source-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <h3>YouTube</h3>
+                        <p>Videos, playlists, or livestreams via YouTube embed</p>
+                        <div class="source-input hidden">
+                            <input type="text" id="youtube-input" placeholder="Paste YouTube video or playlist URL">
+                            <button class="btn-secondary" id="youtube-connect">Connect</button>
+                        </div>
+                    </div>
+                    
+                    <div class="source-card" data-source="apple">
+                        <div class="source-icon">
+                            <i class="fab fa-apple"></i>
+                        </div>
+                        <h3>Apple Music</h3>
+                        <p>Open Apple Music web player in a separate tab</p>
+                        <div class="source-input hidden">
+                            <button class="btn-secondary" id="apple-connect">Open Apple Music</button>
+                        </div>
+                    </div>
+                    
+                    <div class="source-card" data-source="manual">
+                        <div class="source-icon">
+                            <i class="fas fa-headphones"></i>
+                        </div>
+                        <h3>Manual Control</h3>
+                        <p>Start your music elsewhere, use our timer controls</p>
+                        <div class="source-input hidden">
+                            <p>Play music on your device, then proceed to set up your focus session.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-actions">
+                    <button class="btn-primary" id="next-from-music" disabled>Next: Choose Focus <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </section>
+
+            <!-- Step 2: Focus Template Selection -->
+            <section id="step-focus" class="step-content">
+                <h2><i class="fas fa-brain"></i> Choose Your Focus Type</h2>
+                <p class="step-description">Select a template that matches your task - not music genres, but cognitive focus types.</p>
+                
+                <div class="focus-templates">
+                    <!-- Templates will be populated by JavaScript -->
+                </div>
+                
+                <div class="step-actions">
+                    <button class="btn-secondary" id="back-to-music"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn-primary" id="next-from-focus" disabled>Next: Set Timer <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </section>
+
+            <!-- Step 3: Timer Configuration -->
+            <section id="step-timer" class="step-content">
+                <h2><i class="fas fa-clock"></i> Set Your Focus Duration</h2>
+                <p class="step-description">Define how long you want to focus. Timer will automatically stop music when done.</p>
+                
+                <div class="timer-options">
+                    <div class="timer-card" id="custom-timer-option">
+                        <div class="timer-icon">
+                            <i class="fas fa-hourglass-start"></i>
+                        </div>
+                        <h3>Custom Timer</h3>
+                        <p>Set a specific focus duration</p>
+                        
+                        <div class="timer-inputs">
+                            <div class="time-input-group">
+                                <label for="hours">Hours</label>
+                                <input type="number" id="hours" min="0" max="99" value="0">
+                            </div>
+                            <div class="time-input-group">
+                                <label for="minutes">Minutes</label>
+                                <input type="number" id="minutes" min="1" max="59" value="25">
+                            </div>
+                            <div class="time-input-group">
+                                <label for="seconds">Seconds</label>
+                                <input type="number" id="seconds" min="0" max="59" value="0">
+                            </div>
+                        </div>
+                        
+                        <div class="quick-times">
+                            <button class="quick-time-btn" data-minutes="15">15min</button>
+                            <button class="quick-time-btn" data-minutes="25">25min</button>
+                            <button class="quick-time-btn" data-minutes="45">45min</button>
+                            <button class="quick-time-btn" data-minutes="60">1hr</button>
+                            <button class="quick-time-btn" data-minutes="90">1.5hr</button>
+                        </div>
+                    </div>
+                    
+                    <div class="timer-card" id="skip-timer-option">
+                        <div class="timer-icon">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <h3>Skip Timer</h3>
+                        <p>Play freely without automatic stop</p>
+                        <p class="small-note">You can still pause/stop manually</p>
+                        <button class="btn-secondary" id="skip-timer-btn">Choose Free Play</button>
+                    </div>
+                </div>
+                
+                <!-- Pomodoro Toggle -->
+                <div class="pomodoro-toggle">
+                    <input type="checkbox" id="pomodoro-toggle">
+                    <label for="pomodoro-toggle">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Enable Pomodoro Mode</span>
+                    </label>
+                    
+                    <div class="pomodoro-settings hidden">
+                        <div class="pomodoro-inputs">
+                            <div class="pomodoro-input-group">
+                                <label for="focus-duration">Focus (min)</label>
+                                <input type="number" id="focus-duration" min="5" max="120" value="25">
+                            </div>
+                            <div class="pomodoro-input-group">
+                                <label for="break-duration">Break (min)</label>
+                                <input type="number" id="break-duration" min="1" max="30" value="5">
+                            </div>
+                            <div class="pomodoro-input-group">
+                                <label for="cycles">Cycles</label>
+                                <input type="number" id="cycles" min="1" max="12" value="4">
+                            </div>
+                        </div>
+                        <p class="small-note">Music will continue during breaks (volume may adjust)</p>
+                    </div>
+                </div>
+                
+                <div class="step-actions">
+                    <button class="btn-secondary" id="back-to-focus"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn-primary" id="next-from-timer" disabled>Next: Start Session <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </section>
+
+            <!-- Step 4: Active Session -->
+            <section id="step-session" class="step-content">
+                <h2><i class="fas fa-play-circle"></i> Focus Session</h2>
+                <p class="step-description" id="session-description">Your focus session is ready. Start when you're ready to begin.</p>
+                
+                <div class="session-display">
+                    <div class="session-info">
+                        <div class="session-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-music"></i>
+                                <span id="current-music-source">Manual</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-brain"></i>
+                                <span id="current-focus-template">Deep Work</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                <span id="current-timer-mode">Custom Timer</span>
+                            </div>
+                        </div>
+                        
+                        <div class="timer-display">
+                            <div class="time-remaining" id="time-remaining">25:00</div>
+                            <div class="timer-label" id="timer-phase-label">Focus</div>
+                            <div class="pomodoro-progress" id="pomodoro-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <div class="cycle-count">Cycle: <span id="current-cycle">1</span>/<span id="total-cycles">4</span></div>
+                            </div>
+                        </div>
+                        
+                        <div class="session-controls">
+                            <button class="btn-play" id="start-session">
+                                <i class="fas fa-play"></i> Start Focus Session
+                            </button>
+                            <button class="btn-secondary hidden" id="pause-session">
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                            <button class="btn-stop hidden" id="stop-session">
+                                <i class="fas fa-stop"></i> End Session
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Music Player Embed Container -->
+                    <div class="player-container" id="player-container">
+                        <div class="player-placeholder" id="player-placeholder">
+                            <i class="fas fa-headphones"></i>
+                            <p>Music player will appear here when connected</p>
+                            <p class="small-note">If using Apple Music or manual control, music controls will not be available here</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Volume Control -->
+                    <div class="volume-control">
+                        <i class="fas fa-volume-down"></i>
+                        <input type="range" id="volume-slider" min="0" max="100" value="70">
+                        <i class="fas fa-volume-up"></i>
+                        <span class="volume-value" id="volume-value">70%</span>
+                    </div>
+                </div>
+                
+                <div class="step-actions">
+                    <button class="btn-secondary" id="back-to-timer"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn-primary hidden" id="session-complete-btn">Finish & Review</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Session Complete Modal -->
+        <div class="modal-overlay hidden" id="completion-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Focus Session Complete</h2>
+                </div>
+                <div class="modal-body">
+                    <p class="completion-message">Great work! You focused for <span id="session-duration">25 minutes</span>.</p>
+                    <p class="completion-subtext">Music has been stopped. Take a moment to stretch and relax.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" id="new-session-btn">Start New Session</button>
+                    <button class="btn-secondary" id="close-modal-btn">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>FocusFlow uses official embeds to control playback. No music is hosted or modified.</p>
+            <p class="footer-note">Made for focus • No distractions • No accounts • Just flow</p>
+        </footer>
+    </div>
+
+    <!-- External Scripts -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="storage.js"></script>
+    <script src="template-manager.js"></script>
+    <script src="timer.js"></script>
+    <script src="embed-manager.js"></script>
+    <script src="app.js"></script>
+</body>
+                                                                                                    </html>
