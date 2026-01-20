@@ -61,7 +61,60 @@ body {
     min-height: 100vh;
     padding: var(--spacing-md);
 }
+/* Add to existing styles.css */
 
+.session-instruction {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+}
+
+.session-instruction i {
+    color: var(--accent-primary);
+    margin-top: 2px;
+}
+
+.session-instruction p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.music-reminder {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid var(--accent-warning);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    animation: fadeIn 0.3s ease;
+}
+
+.reminder-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.reminder-content i {
+    font-size: 1.5rem;
+    color: var(--accent-warning);
+}
+
+.reminder-content h4 {
+    margin: 0 0 4px 0;
+    color: var(--accent-warning);
+}
+
+.reminder-content p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
 .container {
     max-width: 1200px;
     margin: 0 auto;
